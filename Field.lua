@@ -1,15 +1,21 @@
-local t = {}
+local function toIndex (width, x,y)
+    if not y then
+        x,y = x.x, x.y
+    end
 
-local function toIndex (width, x, y)
     return (y-1)*width + x
 end
+
+local function getLength (self)
+    return self.width * self.height
+end
+
+local t = {}
 
 function t.new (width, height)
     local m = {}
     m.__index = t
-    m.__len = function (self)
-        return self.width * self.height
-    end
+    m.__len = getLength
 
     local o = setmetatable({}, m)
     o.width = width
@@ -19,29 +25,41 @@ function t.new (width, height)
 end
 
 function t:get (x, y)
-    local index <const> = toIndex(self.width, x, y)
+    local index <const> = toIndex(self.width, x,y)
     return self[index]
 end
 
-function t:set (x, y, value)
-    local index <const> = toIndex(self.width, x, y)
+function t:set (value, x,y)
+    local index <const> = toIndex(self.width, x,y)
     self[index] = value
 end
 
-function t:setVector (vector, value)
-    for i=0,vector.length-1 do
-        local x <const> = vector.orientation=='h' and vector.x+i or vector.x
-        local y <const> = vector.orientation=='v' and vector.y+i or vector.y
-        local index <const> = toIndex(self.width, x, y)
+function t:setVector (value, vector)
+    local coordinates = {x=vector.x, y=vector.y}
+    local varName <const> = vector:isHorizontal() and 'x' or 'y'
+
+    for i=1, #vector do
+        local index <const> = toIndex(self.width, coordinates)
         self[index] = value
+        coordinates[varName] = coordinates[varName] + 1
     end
 end
 
 function t:swap (a, b)
-    local av <const> = self:get(a.x, a.y)
-    local bv <const> = self:get(b.x, b.y)
-    self:set(a.x, a.y, bv)
-    self:set(b.x, b.y, av)
+    local av <const> = self:get(a)
+    local bv <const> = self:get(b)
+    self:set(bv, a)
+    self:set(av, b)
+end
+
+function t:contains (x, y)
+    if not y then
+        x,y = x.x, x.y
+    end
+
+    local isInside <const> = x>=1 and x<=self.width and
+                             y>=1 and y<=self.height
+    return isInside
 end
 
 return t

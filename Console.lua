@@ -1,4 +1,4 @@
-local Vector = dofile("Vector.lua")
+local Vector = require("Vector")
 
 local t = {}
 
@@ -39,7 +39,7 @@ function t.getInput ()
         local from = Vector.newFromInput(x,y)
         local to = Vector.newFromInput(x,y)
 
-        if d=='l' then to.x=to.x-1
+            if d=='l' then to.x=to.x-1
         elseif d=='u' then to.y=to.y-1
         elseif d=='r' then to.x=to.x+1
         elseif d=='d' then to.y=to.y+1

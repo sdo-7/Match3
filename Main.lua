@@ -1,7 +1,8 @@
-local Console = dofile("Console.lua")
-local field = dofile("Field.lua").new(10,10)
-local model = dofile("Model.lua").new(field)
-local view = dofile("View.lua").new(model)
+local Console = require("Console")
+
+local field = require("Field").new(10,10)
+local model = require("Model").new(field)
+local view  = require("View").new(model)
 
 
 
