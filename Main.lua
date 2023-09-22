@@ -6,31 +6,22 @@ local view  = require("View").new(model)
 
 
 
-local InputHandler = {}
+local inputHandlers = {}
 
-InputHandler[Console.CMD_QUIT] = function (cmd)
+inputHandlers[Console.commandsCodes.invalid] = function (command)
+    Console.printError("Invalid command")
+end
+
+inputHandlers[Console.commandsCodes.quit] = function (command)
     Console.print("Good bye!")
     os.exit(true)
 end
 
-InputHandler[Console.CMD_MOVE] = function (cmd)
-    Console.print("Moving from " .. tostring(cmd.from) .. " to " .. tostring(cmd.to))
-    model:move(cmd.from, cmd.to)
+inputHandlers[Console.commandsCodes.move] = function (command)
+    local str <const> = string.format("Moving from %s to %s", tostring(command.from), tostring(command.to))
+    Console.print(str)
+    model:move(command.from, command.to)
     view:update()
-end
-
-function InputHandler.handleInvalidCommand (cmd)
-    Console.printError("Invalid command")
-end
-
-function InputHandler.handle (cmd)
-    if not cmd then
-        InputHandler.handleInvalidCommand(cmd)
-    else
-        local call <const> = function (cmd) InputHandler[cmd.code](cmd) end
-        local status <const>, msg <const> = pcall(call, cmd)
-        if not status then Console.printError("Error: " .. msg) end
-    end
 end
 
 
@@ -38,11 +29,19 @@ end
 math.randomseed(0)
 
 model:init()
-view:printModel()
-Console.print()
+view:update()
 
 while true do
     Console.printInvitation()
-    local cmd <const> = Console.getInput()
-    InputHandler.handle(cmd)
+
+    local command <const> = Console.getInput()
+
+    local makeCall <const> = function ()
+        inputHandlers[command.code](command)
+    end
+
+    local status <const>, msg <const> = pcall(makeCall)
+    if not status then
+        Console.printError("Error: " .. msg)
+    end
 end

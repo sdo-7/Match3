@@ -5,23 +5,23 @@ local values = {}
 values.blank = '.'
 values.min   = 1
 values.max   = 6
+values = Common.newROTable(values)
 
 local tickResults = {}
 tickResults.foundMatches     = 1
 tickResults.foundNoMatches   = 2
 tickResults.movedDown        = 3
 tickResults.addedNewElements = 4
+tickResults = Common.newROTable(tickResults)
 
 
 local t = {}
-t.values      = Common.addROTable(values)
-t.tickResults = Common.addROTable(tickResults)
+t.values      = values
+t.tickResults = tickResults
 
 function t.new (field)
     local o = setmetatable({}, {__index = t})
     o.field = field
-    o.values      = t.values
-    o.tickResults = t.tickResults
 
     local impl = Impl.new(o)
 

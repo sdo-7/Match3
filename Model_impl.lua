@@ -27,7 +27,7 @@ end
 function t:move (from, to)
     assert(self.state == self.states.idle)
 
-    local f = function (coordinates)
+    local f <const> = function (coordinates)
         local isValid = self.model.field:contains(coordinates)
         if not isValid then
             local msg <const> = string.format("cannot move to/from %s.", tostring(coordinates))
@@ -75,7 +75,7 @@ function t:getMatchAt (x,y, horizontal)
     local limit     <const> = vector:isHorizontal() and self.model.field.width or self.model.field.height
     local origValue <const> = self.model.field:get(vector)
 
-    local f = function (delta, limit)
+    local f <const> = function (delta, limit)
         local coordinates = {x=vector.x, y=vector.y}
         local coordinate  = vector[varName]
 
@@ -130,7 +130,7 @@ end
 
 function t:getAllMatches ()
     local set = {}
-    local f = function (vector)
+    local f <const> = function (vector)
         vector = Vector.new(vector)
         local xInfo    <const> = {name='x', limit=self.model.field.width}
         local yInfo    <const> = {name='y', limit=self.model.field.height}

@@ -6,8 +6,7 @@ states.idle         = 0
 states.checkMatches = 1
 states.moveDown     = 2
 states.addNew       = 3
-
-local t = {}
+states = Common.newROTable(states)
 
 local handlers = {}
 
@@ -23,10 +22,10 @@ handlers[states.checkMatches] = function (impl)
             impl.model.field:setVector(impl.model.values.blank, vector)
         end
 
-        impl.state = states.moveDown
+        impl.state = impl.states.moveDown
         return impl.model.tickResults.foundMatches, matches
     else
-        impl.state = states.idle
+        impl.state = impl.states.idle
         return impl.model.tickResults.foundNoMatches
     end
 end
@@ -50,7 +49,7 @@ handlers[states.moveDown] = function (impl)
         end
     end
 
-    impl.state = states.addNew
+    impl.state = impl.states.addNew
     return impl.model.tickResults.movedDown
 end
 
@@ -67,14 +66,16 @@ handlers[states.addNew] = function (impl)
         end
     end
 
-    impl.state = states.checkMatches
+    impl.state = impl.states.checkMatches
     return impl.model.tickResults.addedNewElements
 end
 
+local t = {}
+
 function t.new (impl)
-    impl.states = Common.addROTable(states)
-    impl.state = states.idle
-    impl.tick = function (impl)
+    impl.states = states
+    impl.state  = impl.states.idle
+    impl.tick   = function (impl)
         return handlers[impl.state](impl)
     end
 
