@@ -9,7 +9,7 @@ local view  = require("View").new(model)
 local inputHandlers = {}
 
 inputHandlers[Console.commandsCodes.invalid] = function (command)
-    Console.printError("Invalid command")
+    Console.printError("invalid command")
 end
 
 inputHandlers[Console.commandsCodes.quit] = function (command)
@@ -31,17 +31,16 @@ math.randomseed(0)
 model:init()
 view:update()
 
+local makeCall <const> = function (command)
+    inputHandlers[command.code](command)
+end
+
 while true do
     Console.printInvitation()
 
     local command <const> = Console.getInput()
-
-    local makeCall <const> = function ()
-        inputHandlers[command.code](command)
-    end
-
-    local status <const>, msg <const> = pcall(makeCall)
+    local status <const>, msg <const> = pcall(makeCall, command)
     if not status then
-        Console.printError("Error: " .. msg)
+        Console.printError(msg)
     end
 end

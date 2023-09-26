@@ -76,7 +76,7 @@ function t:getMatchAt (x,y, horizontal)
     local origValue <const> = self.model.field:get(vector)
 
     local f <const> = function (delta, limit)
-        local coordinates = {x=vector.x, y=vector.y}
+        local coordinates = Vector.new(vector)
         local coordinate  = vector[varName]
 
         for i=coordinate+delta, limit, delta do
@@ -121,43 +121,62 @@ function t:isVMatchAt (x, y)
 end
 
 function t:isAnyMatchAt (x, y)
-    if not y then
-        x,y = x.x, x.y
-    end
-
     return self:isHMatchAt(x,y) or self:isVMatchAt(x,y)
 end
 
-function t:getAllMatches ()
-    local set = {}
-    local f <const> = function (vector)
-        vector = Vector.new(vector)
-        local xInfo    <const> = {name='x', limit=self.model.field.width}
-        local yInfo    <const> = {name='y', limit=self.model.field.height}
-        local slowInfo <const> = vector:isHorizontal() and yInfo or xInfo
-        local fastInfo <const> = vector:isHorizontal() and xInfo or yInfo
+function t:getMatchesFor (horizontal)
+    local xInfo    <const> = {name='x', limit=self.model.field.width}
+    local yInfo    <const> = {name='y', limit=self.model.field.height}
+    local slowInfo <const> = horizontal and yInfo or xInfo
+    local fastInfo <const> = horizontal and xInfo or yInfo
 
-        for slow=1, slowInfo.limit do
-            local fast=1
-            while fast<=fastInfo.limit do
-                vector[slowInfo.name] = slow
-                vector[fastInfo.name] = fast
-                local match <const>, matchVector <const> = self:getMatchAt(vector)
+    local vector = Vector.new(nil, nil, horizontal)
+    local set    = {}
 
-                if match then
-                    set[#set+1] = matchVector
-                end
+    for slow=1, slowInfo.limit do
+        local fast=1
+        while fast<=fastInfo.limit do
+            vector[slowInfo.name] = slow
+            vector[fastInfo.name] = fast
+            local match <const>, matchVector <const> = self:getMatchAt(vector)
 
-                fast = fast + matchVector.length
+            if match then
+                set[#set+1] = matchVector
             end
+
+            fast = fast + matchVector.length
         end
     end
 
-    f(Vector.newh())
-    f(Vector.newv())
-
     set = #set~=0 and set or nil
     return set
+end
+
+function t:getHMatches ()
+    return self:getMatchesFor(true)
+end
+
+function t:getVMatches ()
+    return self:getMatchesFor(false)
+end
+
+function t:getAllMatches ()
+    local matches  = self:getHMatches()
+    local vMatches = self:getVMatches()
+
+    if not vMatches then
+        return matches
+    end
+
+    if not matches then
+        return vMatches
+    end
+
+    for _,vector in ipairs(vMatches) do
+        matches[#matches+1] = vector
+    end
+
+    return matches
 end
 
 return t

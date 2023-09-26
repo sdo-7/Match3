@@ -23,8 +23,10 @@ end
 
 function t.new (x,y, horizontal, length)
     if type(x)=="table" then
-        horizontal = horizontal~=nil and horizontal or x.horizontal
-        length = length~=nil and length or x.length
+        if horizontal==nil then
+            horizontal = x.horizontal
+        end
+        length = length or x.length
         x,y = x.x, x.y
     end
 

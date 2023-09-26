@@ -58,7 +58,9 @@ function t.print (str)
     print(str or '')
 end
 
-t.printError = t.print
+function t.printError (str)
+    print("Error: " .. str)
+end
 
 function t.write (str)
     io.write(str)

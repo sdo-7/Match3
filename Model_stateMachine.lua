@@ -17,17 +17,17 @@ end
 handlers[states.checkMatches] = function (impl)
     local matches <const> = impl:getAllMatches()
 
-    if matches then
-        for _,vector in ipairs(matches) do
-            impl.model.field:setVector(impl.model.values.blank, vector)
-        end
-
-        impl.state = impl.states.moveDown
-        return impl.model.tickResults.foundMatches, matches
-    else
+    if not matches then
         impl.state = impl.states.idle
         return impl.model.tickResults.foundNoMatches
     end
+
+    for _,vector in ipairs(matches) do
+        impl.model.field:setVector(impl.model.values.blank, vector)
+    end
+
+    impl.state = impl.states.moveDown
+    return impl.model.tickResults.foundMatches, matches
 end
 
 handlers[states.moveDown] = function (impl)
