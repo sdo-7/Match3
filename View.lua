@@ -1,6 +1,6 @@
 local Common  = require("Common")
-local Console = require("Console")
 local Vector  = require("Vector")
+local Console = require("Console")
 local Model   = require("Model")
 
 local values = {[Model.values.blank]=' '}
@@ -66,18 +66,12 @@ local function printModel (model)
 end
 
 local t = {}
+t.__index = t
 t.values = values
-
-function t.new (model)
-    local o = setmetatable({}, {__index = t})
-    o.model = model
-
-    return o
-end
 
 function t:update ()
     while true do
-        printModel(self.model)
+        printModel(self.model._impl)
 
         local code <const>, data <const> = self.model:tick()
         if not code then break end
@@ -86,6 +80,13 @@ function t:update ()
     end
 
     Console.print()
+end
+
+function t.new (model)
+    local o = setmetatable({}, t)
+    o.model = model
+
+    return o
 end
 
 return t

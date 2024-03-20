@@ -6,27 +6,18 @@ local function toIndex (width, x,y)
     return (y-1)*width + x
 end
 
-local function getLength (self)
-    return self.width * self.height
-end
-
 local t = {}
+t.__index = t
 
-function t.new (width, height)
-    local m = {}
-    m.__index = t
-    m.__len = getLength
-
-    local o = setmetatable({}, m)
-    o.width = width
-    o.height = height
-
-    return o
+t.__len = function (self)
+    local length = self.width * self.height
+    return length
 end
 
 function t:get (x, y)
     local index <const> = toIndex(self.width, x,y)
-    return self[index]
+    local value <const> = self[index]
+    return value
 end
 
 function t:set (value, x,y)
@@ -60,6 +51,14 @@ function t:contains (x, y)
     local isInside <const> = x>=1 and x<=self.width and
                              y>=1 and y<=self.height
     return isInside
+end
+
+function t.new (width, height)
+    local o = setmetatable({}, t)
+    o.width = width
+    o.height = height
+
+    return o
 end
 
 return t

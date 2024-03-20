@@ -1,7 +1,6 @@
 local Console = require("Console")
 
-local field = require("Field").new(10,10)
-local model = require("Model").new(field)
+local model = require("Model").new(10, 10)
 local view  = require("View").new(model)
 
 

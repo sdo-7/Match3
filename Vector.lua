@@ -1,6 +1,9 @@
-local t = {}
+local Position = require('Position')
 
-local function toString (self)
+local t = {}
+t.__index = t
+
+t.__tostring = function (self)
     local xStr <const> = t.formatX(self.x)
     local yStr <const> = t.formatY(self.y)
     local str = string.format("(%s:%s", xStr, yStr)
@@ -17,7 +20,7 @@ local function toString (self)
     return str .. ")"
 end
 
-local function getLength (self)
+t.__len = function (self)
     return self.length
 end
 
@@ -30,14 +33,7 @@ function t.new (x,y, horizontal, length)
         x,y = x.x, x.y
     end
 
-    local m = {}
-    m.__index = t
-    m.__tostring = toString
-    m.__len = getLength
-
-    local o = setmetatable({}, m)
-    o.x = x
-    o.y = y
+    local o = setmetatable(Position.new(x, y), t)
     o.horizontal = horizontal
     o.length = length
 

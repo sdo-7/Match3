@@ -1,34 +1,30 @@
-local Vector             = require("Vector")
-local Model_stateMachine = require("Model_stateMachine")
+local Vector = require("Vector")
+local Field = dofile('./Model/Field.lua')
+local StateMachine = dofile("./Model/StateMachine.lua")
 
 local t = {}
-
-function t.new (model)
-    local o = setmetatable({}, {__index = t})
-    o.model = model
-    o = Model_stateMachine.new(o)
-
-    return o
-end
+t.__index = t
 
 function t:init ()
-    for y=1, self.model.field.height do
-        for x=1, self.model.field.width do
+    for y=1, self.field.height do
+        for x=1, self.field.width do
             repeat
                 local value <const> = self:randomValue()
-                self.model.field:set(value, x,y)
+                self.field:set(value, x,y)
             until not self:isAnyMatchAt(x,y)
         end
     end
+end
 
-    self.state = self.states.idle
+function t:tick ()
+    return self.stateMachine:handle()
 end
 
 function t:move (from, to)
-    assert(self.state == self.states.idle)
+    assert(self.stateMachine.current == 'idle')
 
     local f <const> = function (coordinates)
-        local isValid = self.model.field:contains(coordinates)
+        local isValid = self.field:contains(coordinates)
         if not isValid then
             local msg <const> = string.format("cannot move to/from %s.", tostring(coordinates))
             error(msg, 0)
@@ -38,26 +34,26 @@ function t:move (from, to)
     f(from)
     f(to)
 
-    self.model.field:swap(from, to)
+    self.field:swap(from, to)
     local anyMatches <const> = self:isAnyMatchAt(from) or self:isAnyMatchAt(to)
     if not anyMatches then
-        self.model.field:swap(from, to)
+        self.field:swap(from, to)
 
         local msg <const> = "cannot do this move. It's pointless."
         error(msg, 0)
     end
 
-    self.state = self.states.checkMatches
+    self.stateMachine.current = 'checkMatches'
 end
 
 function t:mix ()
 end
 
 function t:dump ()
-    for y=1, self.model.field.height do
-        for x=1, self.model.field.width do
-            local value <const> = self.model.field:get(x,y)
-            local str <const> = string.format(" %s", (value or 'n'))
+    for y=1, self.field.height do
+        for x=1, self.field.width do
+            local value <const> = self.field:get(x,y)
+            local str <const> = string.format("%s, ", (value or 'n'))
             io.write(str)
         end
         io.write('\n')
@@ -72,8 +68,8 @@ end
 function t:getMatchAt (x,y, horizontal)
     local vector            = Vector.new(x,y, horizontal)
     local varName   <const> = vector:isHorizontal() and 'x' or 'y'
-    local limit     <const> = vector:isHorizontal() and self.model.field.width or self.model.field.height
-    local origValue <const> = self.model.field:get(vector)
+    local limit     <const> = vector:isHorizontal() and self.field.width or self.field.height
+    local origValue <const> = self.field:get(vector)
 
     local f <const> = function (delta, limit)
         local coordinates = Vector.new(vector)
@@ -81,7 +77,7 @@ function t:getMatchAt (x,y, horizontal)
 
         for i=coordinate+delta, limit, delta do
             coordinates[varName] = i
-            local curValue <const> = self.model.field:get(coordinates)
+            local curValue <const> = self.field:get(coordinates)
 
             if curValue~=origValue then
                 break
@@ -125,8 +121,8 @@ function t:isAnyMatchAt (x, y)
 end
 
 function t:getMatchesFor (horizontal)
-    local xInfo    <const> = {name='x', limit=self.model.field.width}
-    local yInfo    <const> = {name='y', limit=self.model.field.height}
+    local xInfo    <const> = {name='x', limit=self.field.width}
+    local yInfo    <const> = {name='y', limit=self.field.height}
     local slowInfo <const> = horizontal and yInfo or xInfo
     local fastInfo <const> = horizontal and xInfo or yInfo
 
@@ -177,6 +173,15 @@ function t:getAllMatches ()
     end
 
     return matches
+end
+
+function t.new (model, width,height)
+    local o = setmetatable({}, t)
+    o.model = model
+    o.field = Field.new(width, height)
+    o.stateMachine = StateMachine.new(o)
+
+    return o
 end
 
 return t
