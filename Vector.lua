@@ -1,6 +1,6 @@
 local Position = require('Position')
 
-local t = {}
+local t = setmetatable({}, Position)
 t.__index = t
 
 t.__tostring = function (self)
