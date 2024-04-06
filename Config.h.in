@@ -1,0 +1,3 @@
+#pragma once
+
+#cmakedefine APP_DIR "${APP_DIR}"

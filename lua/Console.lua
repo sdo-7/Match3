@@ -1,17 +1,17 @@
-local Common = require("Common")
-local Vector = require("Vector")
+local SealedTable = require('SealedTable')
+local Vector = require('Vector')
 
-local commandsCodes = {}
-commandsCodes.invalid = -1
-commandsCodes.quit = 0
-commandsCodes.move = 1
-commandsCodes = Common.newROTable(commandsCodes)
+local commandsCodes = SealedTable.new({
+    invalid = 'invalid',
+    quit = 'quit',
+    move = 'move',
+})
 invalidCommand = {code = commandsCodes.invalid}
 
-local commandsStrings = {}
-commandsStrings.quit = 'q'
-commandsStrings.move = 'm'
-commandsStrings = Common.newROTable(commandsStrings)
+local commandsStrings = SealedTable.new({
+    quit = 'q',
+    move = 'm',
+})
 
 local handlers = setmetatable({}, {
     __index = function (t, commandStr)
@@ -59,7 +59,7 @@ function t.print (str)
 end
 
 function t.printError (str)
-    print("Error: " .. str)
+    print('Error: ' .. str)
 end
 
 function t.write (str)
@@ -67,12 +67,12 @@ function t.write (str)
 end
 
 function t.printInvitation ()
-    io.write("enter> ")
+    io.write('enter> ')
 end
 
 function t.getInput ()
-    local line <const> = io.read("l")
-    local getToken = string.gmatch(line, "%g+")
+    local line <const> = io.read('l')
+    local getToken = string.gmatch(line, '%g+')
     local code <const> = getToken()
 
     return handlers[code](getToken)

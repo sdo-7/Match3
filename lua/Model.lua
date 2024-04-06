@@ -1,18 +1,18 @@
-local Common = require("Common")
-local Impl   = dofile("./Model/Impl.lua")
+local SealedTable = require('SealedTable')
+local Impl = dofile('./Model/Impl.lua')
 
-local values = {}
-values.blank = '.'
-values.min   = 1
-values.max   = 6
-values = Common.newROTable(values)
+local values = SealedTable.new({
+    blank = '.',
+    min = 1,
+    max = 6,
+})
 
-local tickResults = {}
-tickResults.foundMatches     = 1
-tickResults.foundNoMatches   = 2
-tickResults.movedDown        = 3
-tickResults.addedNewElements = 4
-tickResults = Common.newROTable(tickResults)
+local tickResults = SealedTable.new({
+    foundMatches = 'foundMatches',
+    foundNoMatches = 'foundNoMatches',
+    movedDown = 'movedDown',
+    addedNewElements = 'addedNewElements',
+})
 
 
 local t = {}

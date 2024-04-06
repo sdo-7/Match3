@@ -1,16 +1,24 @@
-local Vector = require("Vector")
+local SealedTable = require('SealedTable')
+local Vector = require('Vector')
+
+local states = SealedTable.new({
+    idle = 'idle',
+    checkMatches = 'checkMatches',
+    moveDown = 'moveDown',
+    addNew = 'addNew',
+})
 
 local handlers = {}
 
-handlers['idle'] = function (impl)
+handlers[states.idle] = function (impl)
     return nil
 end
 
-handlers['checkMatches'] = function (impl)
+handlers[states.checkMatches] = function (impl)
     local matches <const> = impl:getAllMatches()
 
     if not matches then
-        impl.stateMachine.current = 'idle'
+        impl.stateMachine.current = states.idle
         return impl.model.tickResults.foundNoMatches
     end
 
@@ -18,7 +26,7 @@ handlers['checkMatches'] = function (impl)
         impl.field:setVector(impl.model.values.blank, vector)
     end
 
-    impl.stateMachine.current = 'moveDown'
+    impl.stateMachine.current = states.moveDown
     return impl.model.tickResults.foundMatches, matches
 end
 
@@ -41,7 +49,7 @@ handlers['moveDown'] = function (impl)
         end
     end
 
-    impl.stateMachine.current = 'addNew'
+    impl.stateMachine.current = states.addNew
     return impl.model.tickResults.movedDown
 end
 
@@ -58,7 +66,7 @@ handlers['addNew'] = function (impl)
         end
     end
 
-    impl.stateMachine.current = 'checkMatches'
+    impl.stateMachine.current = states.checkMatches
     return impl.model.tickResults.addedNewElements
 end
 
@@ -73,7 +81,7 @@ end
 function t.new (impl)
     local o = setmetatable({}, t)
     o._impl = impl
-    o.current = 'idle'
+    o.current = states.idle
 
     return o
 end

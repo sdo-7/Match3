@@ -6,18 +6,18 @@ t.__index = t
 t.__tostring = function (self)
     local xStr <const> = t.formatX(self.x)
     local yStr <const> = t.formatY(self.y)
-    local str = string.format("(%s:%s", xStr, yStr)
+    local str = string.format('(%s:%s', xStr, yStr)
 
     if self.horizontal~=nil then
-        local orientationStr <const> = self.horizontal and "horizontal" or "vertical"
-        str = string.format("%s, orientation=%s", str, orientationStr)
+        local orientationStr <const> = self.horizontal and 'horizontal' or 'vertical'
+        str = string.format('%s, orientation=%s', str, orientationStr)
     end
 
     if self.length then
-        str = string.format("%s, length=%d", str, self.length)
+        str = string.format('%s, length=%d', str, self.length)
     end
 
-    return str .. ")"
+    return str .. ')'
 end
 
 t.__len = function (self)
@@ -25,7 +25,7 @@ t.__len = function (self)
 end
 
 function t.new (x,y, horizontal, length)
-    if type(x)=="table" then
+    if type(x)=='table' then
         if horizontal==nil then
             horizontal = x.horizontal
         end

@@ -1,23 +1,23 @@
-local Console = require("Console")
+local Console = require('Console')
 
-local model = require("Model").new(10, 10)
-local view  = require("View").new(model)
+model = require('Model').new(16, 16)
+local view  = require('View').new(model)
 
 
 
 local inputHandlers = {}
 
 inputHandlers[Console.commandsCodes.invalid] = function (command)
-    Console.printError("invalid command")
+    Console.printError('invalid command')
 end
 
 inputHandlers[Console.commandsCodes.quit] = function (command)
-    Console.print("Good bye!")
+    Console.print('Good bye!')
     os.exit(true)
 end
 
 inputHandlers[Console.commandsCodes.move] = function (command)
-    local str <const> = string.format("Moving from %s to %s", tostring(command.from), tostring(command.to))
+    local str <const> = string.format('Moving from %s to %s', tostring(command.from), tostring(command.to))
     Console.print(str)
     model:move(command.from, command.to)
     view:update()
@@ -34,7 +34,7 @@ local makeCall <const> = function (command)
     inputHandlers[command.code](command)
 end
 
-while true do
+function iterate ()
     Console.printInvitation()
 
     local command <const> = Console.getInput()
