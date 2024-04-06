@@ -21,3 +21,8 @@ m X Y DESTINATION
 DESTINATION = l | r | u | d
 m 10 2 l
 ```
+
+to test lua code
+```
+luarocks test
+```
