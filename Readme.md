@@ -28,7 +28,7 @@ luarocks test
 ```
 
 
-~[](https://www.lua.org/images/powered-by-lua.gif)
+![](https://www.lua.org/images/powered-by-lua.gif)
 this app uses lua https://www.lua.org/
 ```
 Copyright © 1994–2023 Lua.org, PUC-Rio.
