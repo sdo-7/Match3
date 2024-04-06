@@ -1,6 +1,6 @@
 to build
 ```
-git clone git@github.com:sdo-7/Match3.git
+git clone --recurse-submodules git@github.com:sdo-7/Match3.git
 cd Match3
 mkdir build
 cd build
