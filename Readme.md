@@ -1,16 +1,13 @@
-to build
+to build on Windows
 ```
 git clone --recurse-submodules git@github.com:sdo-7/Match3.git
 cd Match3
-mkdir build
-cd build
-cmake ..
-cmake --build .
+./build.sh
 ```
 
 to launch
 ```
-./game.exe
+./build/build/generators/Release/game.exe
 ```
 commands
 ```

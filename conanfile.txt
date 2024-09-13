@@ -1,0 +1,13 @@
+[requires]
+lua/5.4.6
+glfw/3.4
+glm/cci.20230113
+glad/0.1.36
+opengl/system
+
+[generators]
+CMakeDeps
+CMakeToolchain
+
+[layout]
+cmake_layout

@@ -1,6 +1,6 @@
 #include <filesystem>
 #include <ostream>
-#include <lua/lua.hpp>
+#include <lua.hpp>
 #include "Data.hpp"
 #include "Lua.hpp"
 

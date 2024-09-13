@@ -1,6 +1,6 @@
 #include <iostream>
 #define GLAD_GL_IMPLEMENTATION
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "GLFW.hpp"
 

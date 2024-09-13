@@ -8,9 +8,11 @@ project(
 set(APP_DIR "${PROJECT_SOURCE_DIR}")
 configure_file(Config.h.in Config.h)
 
-add_subdirectory("libs/glfw")
-add_subdirectory("libs/glm")
-add_subdirectory("libs/lua")
+find_package(lua REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(glm REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(glad REQUIRED)
 
 aux_source_directory("main" gameSrc)
 aux_source_directory("main/Model" gameSrc)
@@ -24,17 +26,15 @@ target_compile_definitions(
 )
 target_include_directories(
   game
-  PUBLIC "./libs"
-  PUBLIC "./libs/glfw/include"
-  PUBLIC "./libs/glfw/deps"
-  PUBLIC "./libs/glm"
   PUBLIC "${CMAKE_CURRENT_BINARY_DIR}"
 )
 target_link_libraries(
   game
+  lua::lua
   glfw
-  glm
-  luaengine
+  glm::glm
+  glad::glad
+  opengl::opengl
 )
 set_property(TARGET game PROPERTY CXX_STANDARD 20)
 set_property(TARGET game PROPERTY CXX_STANDARD_REQUIRED ON)

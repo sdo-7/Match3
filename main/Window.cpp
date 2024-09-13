@@ -1,4 +1,4 @@
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "GLFW.hpp"
 #include "Window.hpp"
@@ -16,7 +16,7 @@ void Window::create (int width, int height, const char *title) {
 
 void Window::makeCurrent () {
   glfwMakeContextCurrent(wnd);
-  gladLoadGL(glfwGetProcAddress);
+  gladLoadGL();
 }
 
 bool Window::getCloseFlag () const {

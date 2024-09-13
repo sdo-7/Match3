@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdexcept>
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include "toString.hpp"
 
 using ABGR = GLuint;
